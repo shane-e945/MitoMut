@@ -17,7 +17,7 @@ MitoMut Usage:
   *Note*– Flags may go in any order. If they require an argument, it must
   come directly after the flag.
  
-  -h: This flag shows the help screen with all optional flags and usage information.
+  -h: This flag shows the help screen with all optional flags and usage information.\n
   -c: This flag specifies the header for the mitochondrial section of the genome.
   -f: This flag specifies the path to fasta reference genome 
   -d: Sets the write directory for all intermediate and result files
