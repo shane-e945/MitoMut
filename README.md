@@ -10,7 +10,7 @@ To run MitoMut, you need the following dependencies: </br>
 </br>
 To check your dependencies, run python check_dependencies.py on your environments command line or terminal.
 
-# Sample Runs
+# Instructions
 MitoMut Usage:</br>
   python MitoMut.py [-f/-c/-s/-si/-e/-l] *.bam</br></br>
   
@@ -38,7 +38,7 @@ MitoMut Usage:</br>
   -l: 16569</br>
   -d: . </br>
 
-Sample Runs:</br>
+# Sample Runs
   (Do not type what is in parentheses) </br>
   </br>
   python MitoMut.py test.bam (A standard run with no extra configuration)</br>
