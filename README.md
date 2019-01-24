@@ -14,8 +14,8 @@ To check your dependencies, run python check_dependencies.py on your environment
 MitoMut Usage:</br>
   python MitoMut.py [-f/-c/-s/-si/-e/-l] *.bam</br>
   
-  *Note*– Flags may go in any order. If they require an argument, it must</br>
-  come directly after the flag.</br>
+  <em>*Note*– Flags may go in any order. If they require an argument, it must</br>
+  come directly after the flag.</em></br>
  
   -h: This flag shows the help screen with all optional flags and usage information.</br>
   -c: This flag specifies the header for the mitochondrial section of the genome.</br>
