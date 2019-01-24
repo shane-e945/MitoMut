@@ -11,38 +11,38 @@ To run MitoMut, you need the following dependencies: </br>
 To check your dependencies, run python check_dependencies.py on your environments command line or terminal.</br>
 </br>
 # Sample Runs
-MitoMut Usage:
-  python MitoMut.py [-f/-c/-s/-si/-e/-l] *.bam
+MitoMut Usage:</br>
+  python MitoMut.py [-f/-c/-s/-si/-e/-l] *.bam</br>
   
-  *Note*– Flags may go in any order. If they require an argument, it must
-  come directly after the flag.
+  *Note*– Flags may go in any order. If they require an argument, it must</br>
+  come directly after the flag.</br>
  
-  -h: This flag shows the help screen with all optional flags and usage information.\n
-  -c: This flag specifies the header for the mitochondrial section of the genome.
-  -f: This flag specifies the path to fasta reference genome 
-  -d: Sets the write directory for all intermediate and result files
-  -e: Use this flag if the reference genome is a whole genome reference rather than
-      mitochondrial only.
-  -q: Sets the minimum quality score to be considered a deletion
-  -s: Sets the minimum number of reads required to support a deletion
-  -l: Sets the length of the mitochondrial genome (only use if not human)
-  -si: sets the minimum number of deleted bases required to be qualified as a deleiton
-  
-  Flag Defaults:
-  
-  -c: MT
-  -f: mt.fasta (supplied when downloading MitoMut)
-  -q: 30
-  -s: 5
-  -si: 5
-  -l: 16569
-  -d: .
+  -h: This flag shows the help screen with all optional flags and usage information.</br>
+  -c: This flag specifies the header for the mitochondrial section of the genome.</br>
+  -f: This flag specifies the path to fasta reference genome </br>
+  -d: Sets the write directory for all intermediate and result files</br>
+  -e: Use this flag if the reference genome is a whole genome reference rather than</br>
+      mitochondrial only.</br>
+  -q: Sets the minimum quality score to be considered a deletion</br>
+  -s: Sets the minimum number of reads required to support a deletion</br>
+  -l: Sets the length of the mitochondrial genome (only use if not human)</br>
+  -si: sets the minimum number of deleted bases required to be qualified as a deleiton</br>
+  </br>
+  Flag Defaults:</br>
+  </br>
+  -c: MT</br>
+  -f: mt.fasta (supplied when downloading MitoMut)</br>
+  -q: 30</br>
+  -s: 5</br>
+  -si: 5</br>
+  -l: 16569</br>
+  -d: .</br>
 
-Sample Runs:
-  (Do not type what is in parentheses) 
-  
-  python MitoMut.py test.bam (A standard run with no extra configuration)
-  python MitoMut.py -c chrM test.bam (The bam file's mitochondrial header is chrM instead of MT)
-  python MitoMut.py -d /Users/example_user/ test.bam (Writing to a different directory than where the bam file is)
-  python MitoMut.py -e -f genome.fasta test.bam (extracting the mitochondrial portion of the reference genome)
-  python MitoMut.py -s 20 test.bam (Only deletions with at least 20 supporting reads will be reported)
+Sample Runs:</br>
+  (Do not type what is in parentheses) </br>
+  </br>
+  python MitoMut.py test.bam (A standard run with no extra configuration)</br>
+  python MitoMut.py -c chrM test.bam (The bam file's mitochondrial header is chrM instead of MT)</br>
+  python MitoMut.py -d /Users/example_user/ test.bam (Writing to a different directory than where the bam file is)</br>
+  python MitoMut.py -e -f genome.fasta test.bam (extracting the mitochondrial portion of the reference genome)</br>
+  python MitoMut.py -s 20 test.bam (Only deletions with at least 20 supporting reads will be reported)</br>
