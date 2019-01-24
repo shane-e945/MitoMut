@@ -2,14 +2,14 @@
 MitoMut is a tool to call mitochondrial deletions from next generation sequencing (NGS) data 
 
 # Dependencies
-To run MitoMut, you need the following dependencies:
-  1. python2.7+ or python3.0+
-  2. PySam (Python Module that must be downloaded into your version of Python)
-  3. Samtools (must be on environment path)
-  4. BLAT (must be on environment path)
-
-To check your dependencies, run python check_dependencies.py on your environments command line or terminal.
-
+To run MitoMut, you need the following dependencies: </br>
+  1. python2.7+ or python3.0+ </br>
+  2. PySam (Python Module that must be downloaded into your version of Python) </br>
+  3. Samtools (must be on environment path) </br>
+  4. BLAT (must be on environment path) </br>
+</br>
+To check your dependencies, run python check_dependencies.py on your environments command line or terminal.</br>
+</br>
 # Sample Runs
 MitoMut Usage:
   python MitoMut.py [-f/-c/-s/-si/-e/-l] *.bam
