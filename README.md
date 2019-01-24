@@ -8,8 +8,8 @@ To run MitoMut, you need the following dependencies: </br>
   3. Samtools (must be on environment path) </br>
   4. BLAT (must be on environment path) </br>
 </br>
-To check your dependencies, run python check_dependencies.py on your environments command line or terminal.</br>
-</br>
+To check your dependencies, run python check_dependencies.py on your environments command line or terminal.
+
 # Sample Runs
 MitoMut Usage:</br>
   python MitoMut.py [-f/-c/-s/-si/-e/-l] *.bam</br></br>
@@ -36,7 +36,7 @@ MitoMut Usage:</br>
   -s: 5</br>
   -si: 5</br>
   -l: 16569</br>
-  -d: .</br>
+  -d: . </br>
 
 Sample Runs:</br>
   (Do not type what is in parentheses) </br>
