@@ -57,9 +57,6 @@ class FileParser:
         subprocess.call('samtools view -b -f 128 {} -h {} > {}_bad_cigar_one.bam'.format(
             self.file_path, self.header, self.file_prefix), shell=True)
 
-        subprocess.call('ls -l {}_bad_cigar_one.bam'.format(self.file_prefix), shell = True)
-        subprocess.call('ls -l {}_bad_cigar_two.bam'.format(self.file_prefix), shell = True)
-
         # Collects unmapped reads
         print('Collecting unmapped reads')
         one = Process(target=subprocess.call, args=['samtools view -b -f 68 {} > {}_unmapped_one.bam'.format(
@@ -72,9 +69,6 @@ class FileParser:
 
         one.join()
         two.join()
-
-        subprocess.call('ls -l {}_unmapped_one.bam'.format(self.file_prefix), shell = True)
-        subprocess.call('ls -l {}_unmapped_two.bam'.format(self.file_prefix), shell = True)
 
     @staticmethod
     def filter_candidates(bam_file):
@@ -281,10 +275,10 @@ class FileWriter:
 
             # Extracts information from read data class
             for read in sorted(self.reads.values(), key=lambda r: r.total_count, reverse=True):
-                #if int(read.end) > (self.genome_length // 2) > int(read.start):
-                #    read.start, read.end = read.end, read.start
-                #else:
-                #    read.start, read.end = min(read.start, read.end, key = int), max(read.start, read.end, key = int)
+                if int(read.end) > (self.genome_length // 2) > int(read.start):
+                    read.start, read.end = read.end, read.start
+                else:
+                    read.start, read.end = min(read.start, read.end, key = int), max(read.start, read.end, key = int)
 
                 results.write(tab_line(read.total_count, read.one_count, read.two_count, read.start,
                                        read.end, read.one_qual, read.two_qual))
