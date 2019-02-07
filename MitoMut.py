@@ -10,19 +10,21 @@ from itertools import islice, tee
 from multiprocessing import Process
 
 class FileParser:
-    def __init__(self, file_path, header, reference, write_directory):
+    def __init__(self, file_path, header, reference, write_directory, quality):
         """Class extracts deletion candidates from BAM/SAM file for analysis"""
 
         # Setting all basic class variables
         self.header = header
         self.file_path = file_path
         self.reference = reference
+        self.quality = quality
 
         # Trash file for stdout of subprocess command
         self.null = open(os.devnull, 'w')
 
         # Write path with file_path appended for potential concurrent runs
         self.file_prefix = os.path.join(write_directory, os.path.basename(file_path))
+
 
         # Finds and then filters all potential deletion reads based on cigar
         self.find_candidates()
@@ -52,10 +54,10 @@ class FileParser:
 
         # Collects improperly aligned mitochondrial reads
         print('Collecting improperly aligned reads')
-        subprocess.call('samtools view -b -f 64 {} -h {} > {}_bad_cigar_two.bam'.format(
-            self.file_path, self.header, self.file_prefix), shell=True)
-        subprocess.call('samtools view -b -f 128 {} -h {} > {}_bad_cigar_one.bam'.format(
-            self.file_path, self.header, self.file_prefix), shell=True)
+        subprocess.call('samtools view -q {} -b -f 64 {} -h {} > {}_bad_cigar_two.bam'.format(
+            self.quality, self.file_path, self.header, self.file_prefix), shell=True)
+        subprocess.call('samtools view -q {} -b -f 128 {} -h {} > {}_bad_cigar_one.bam'.format(
+            self.quality, self.file_path, self.header, self.file_prefix), shell=True)
 
         # Collects unmapped reads
         print('Collecting unmapped reads')
@@ -116,7 +118,7 @@ class FileParser:
 
 class ReadParser:
     def __init__(self, file_path, genome_length,
-                 required_quality, required_reads, required_size, write_directory):
+                 required_reads, required_size, write_directory):
 
         """Uses files created from FileParser to find potential deletions"""
 
@@ -125,7 +127,6 @@ class ReadParser:
         self.genome_length = genome_length
         self.required_size = required_size
         self.required_reads = required_reads
-        self.required_quality = required_quality
 
         # Write path with file_path appended for potential concurrent runs
         self.file_prefix = os.path.join(write_directory, os.path.basename(file_path))
@@ -185,11 +186,11 @@ class ReadParser:
         """Takes circular nature of MT into account by testing multiple indices"""
 
         reads = [(read[2], read[4]) for read in reads if min(self.mt_length(int(read[2]), int(read[4])))
-                 > self.required_size]
+                 >= self.required_size]
 
         # Returning a set of all counted deletions
         count = Counter(reads)
-        return {(count[read], read[0], read[1], 'P') for read in reads if count[read] >=
+        return {(count[read], read[0], read[1]) for read in reads if count[read] >=
                 self.required_reads}
 
     def mt_length(self, start, end):
@@ -211,18 +212,23 @@ class Read:
         self.start = 0
         self.end = 0
 
-        self.one_qual = 'N/A'
-        self.two_qual = 'N/A'
-
 
 class FileWriter:
-    def __init__(self, file_path, write_directory, genome_length, reads_one, reads_two):
+    def __init__(self, file_path, header, write_directory, genome_length, reads_one, reads_two):
         """Writes the result deletions to one tab-delimited text file"""
 
         self.file_prefix = os.path.join(write_directory, os.path.basename(file_path))
         self.reads = self.collect_results(reads_one, reads_two)
 
         self.genome_length = genome_length
+        self.header = header
+
+        # Finding coverage to determine heteroplasmy level
+        with pysam.AlignmentFile(file_path, 'rb') as samfile:
+            self.coverage = [0 for i in range(genome_length+1)]
+
+            for pileupcolumn in samfile.pileup(self.header, 0, self.genome_length):
+                self.coverage[pileupcolumn.pos+1] = pileupcolumn.n
 
         self.write_results()
 
@@ -236,7 +242,6 @@ class FileWriter:
 
             new_read.total_count = read[0]
             new_read.one_count = read[0]
-            new_read.one_qual = read[3]
             new_read.start = read[1]
             new_read.end = read[2]
 
@@ -248,7 +253,6 @@ class FileWriter:
 
                 new_read.total_count = int(read[0])
                 new_read.two_count = int(read[0])
-                new_read.two_qual = read[3]
                 new_read.start = read[1]
                 new_read.end = read[2]
 
@@ -259,7 +263,6 @@ class FileWriter:
 
                 old_read.two_count = int(read[0])
                 old_read.total_count = old_read.one_count + old_read.two_count
-                old_read.two_qual = read[3]
 
         return reads
 
@@ -271,17 +274,33 @@ class FileWriter:
 
         with open('{}_results.txt'.format(self.file_prefix), 'w') as results:
             results.write(tab_line('Total Reads', 'S1 Reads', 'S2 Reads', 'Start', 'End',
-                                   'S1 Qual', 'S2 Qual'))
+                                   'Heteroplasmy Level'))
 
             # Extracts information from read data class
-            for read in sorted(self.reads.values(), key=lambda r: r.total_count, reverse=True):
-                if int(read.end) > (self.genome_length // 2) > int(read.start):
-                    read.start, read.end = read.end, read.start
-                else:
-                    read.start, read.end = min(read.start, read.end, key = int), max(read.start, read.end, key = int)
+            fourth_length = self.genome_length // 4
+            lower_cutoff = self.genome_length - self.genome_length/15
+            upper_cutoff = self.genome_length/15
 
-                results.write(tab_line(read.total_count, read.one_count, read.two_count, read.start,
-                                       read.end, read.one_qual, read.two_qual))
+            for read in sorted(self.reads.values(), key=lambda r: r.total_count, reverse=True):
+                start = int(read.start)
+                end = int(read.end)
+                if start < fourth_length  and end > fourth_length * 3:
+                    read.start, read.end = read.end, read.start
+
+                else:
+                    read.start, read.end = min(start, end), max(start, end)
+
+                if start > lower_cutoff and end < upper_cutoff:
+                    continue
+
+                if start < end:
+                    avg_coverage = sum(self.coverage[start:end]) / (end-start+1)
+                else:
+                    length = self.genome_length - end + start + 1
+                    avg_coverage = (sum(self.coverage[:start+1]) + sum(self.coverage[end:]))/length
+
+                heteroplasmy = float(read.total_count) / (int(read.total_count) + avg_coverage)
+                results.write(tab_line(read.total_count, read.one_count, read.two_count, read.start, read.end, heteroplasmy))
 
 
 if __name__ == '__main__':
@@ -325,9 +344,9 @@ if __name__ == '__main__':
 
     start = time()
 
-    FileParser(args.BAM, args.header, args.fasta, args.directory)
-    reads = ReadParser(args.BAM, args.length, args.qual, args.support, args.size, args.directory)
-    FileWriter(args.BAM, args.directory, args.length, reads.reads_one, reads.reads_two)
+    FileParser(args.BAM, args.header, args.fasta, args.directory, args.qual)
+    reads = ReadParser(args.BAM, args.length, args.support, args.size, args.directory)
+    FileWriter(args.BAM, args.header, args.directory, args.length, reads.reads_one, reads.reads_two)
 
     mins, secs = divmod(time() - start, 60)
     print('Elapsed Time   : {} mins, {} secs'.format(int(mins), int(secs)))
