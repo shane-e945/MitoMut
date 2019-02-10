@@ -26,7 +26,7 @@ MitoMut Usage:</br>
   -q: Sets the minimum quality score to be considered a deletion</br>
   -s: Sets the minimum number of reads required to support a deletion</br>
   -l: Sets the length of the mitochondrial genome (only use if not human)</br>
-  -si: sets the minimum number of deleted bases required to be qualified as a deleiton</br>
+  -si: sets the minimum number of deleted bases required to be qualified as a deletion</br>
   </br>
   Flag Defaults:</br>
   </br>
