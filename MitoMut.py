@@ -289,6 +289,9 @@ class FileWriter:
 
                 else:
                     read.start, read.end = min(start, end), max(start, end)
+                
+                start = int(read.start)
+                end = int(read.end)
 
                 if start > lower_cutoff and end < upper_cutoff:
                     continue
