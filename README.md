@@ -1,5 +1,5 @@
 # MitoMut
-MitoMut is a tool to call mitochondrial deletions from paired-end next generation sequencing (NGS) data 
+MitoMut identifies mitochondrial deletions from paired-end next generation sequencing (NGS) data 
 
 # Dependencies
 To run MitoMut, you need the following dependencies: </br>
