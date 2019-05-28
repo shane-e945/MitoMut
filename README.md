@@ -46,3 +46,12 @@ MitoMut Usage:</br>
   python MitoMut.py -d /Users/example_user/ test.bam (Writing to a different directory than where the bam file is)</br>
   python MitoMut.py -e -f genome.fasta test.bam (extracting the mitochondrial portion of the reference genome)</br>
   python MitoMut.py -s 20 test.bam (Only deletions with at least 20 supporting reads will be reported)</br>
+  
+# Test Installation (Works on any Unix based operating system)
+
+Once unzipped, test your installation with the following steps: </br>
+  1. cd into MitoMut's download directory </br>
+  2. Check your dependencies: python ./check_dependencies.py </br>
+  3. If all dependencies are installed: python ./MitoMut.py -f mt.fasta -c chrM test.bam </br>
+  4. Check the output files: diff test_results.txt test.bam_results.txt </br>
+  5. If diff displays nothing, all is successful! </br>
