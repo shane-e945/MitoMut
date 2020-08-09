@@ -235,8 +235,8 @@ class FileWriter:
     @staticmethod
     def collect_results(reads_one, reads_two):
         """Combines strand one and two deletions into one file"""
+        
         reads = dict()
-
         for read in reads_one:
             new_read = Read()
 
