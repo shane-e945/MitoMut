@@ -6,7 +6,7 @@ To run MitoMut, you need the following dependencies: </br>
   1. python2.7+ or python3.0+ </br>
   2. PySam (Python Module that must be downloaded into your version of Python) </br>
   3. Samtools (must be on environment path) </br>
-  4. BLAT (must be on environment path) </br>
+  4. BLAT (must be on environment path) (available at http://hgdownload.soe.ucsc.edu/admin/exe/) </br>
 </br>
 <strong>To check the presence of dependencies, cd into MitoMut's directory and run python check_dependencies.py on your environment's command line or terminal.</strong>
 
