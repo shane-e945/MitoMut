@@ -1,5 +1,6 @@
 # MitoMut
-MitoMut identifies mitochondrial deletions from paired-end next generation sequencing (NGS) data 
+MitoMut identifies mitochondrial deletions from paired-end next generation sequencing (NGS) data.
+(Paper: <a href="https://dl.acm.org/doi/10.1145/3307339.3342158">Mitomut</a>)
 
 # Dependencies
 To run MitoMut, you need the following dependencies: </br>
