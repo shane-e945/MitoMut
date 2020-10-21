@@ -1,6 +1,20 @@
 # MitoMut
 MitoMut identifies mitochondrial deletions from paired-end next generation sequencing (NGS) data.
-(Paper: <a href="https://dl.acm.org/doi/10.1145/3307339.3342158">Mitomut</a>)
+</br>(Paper: <a href="https://dl.acm.org/doi/10.1145/3307339.3342158">Mitomut</a>)
+
+# Citation
+If our work is useful to you, please cite:
+```Bash
+@inproceedings{inproceedings,
+  author = {Elder, C. Shane and Welsh, Catherine},
+  year = {2019},
+  month = {09},
+  pages = {177-182},
+  title = {MitoMut: An Efficient Approach to Detecting Mitochondrial DNA Deletions from Paired-end Next-generation Sequencing Data},
+  isbn = {978-1-4503-6666-3},
+  doi = {10.1145/3307339.3342158}
+}
+```
 
 # Dependencies
 To run MitoMut, you need the following dependencies: </br>
